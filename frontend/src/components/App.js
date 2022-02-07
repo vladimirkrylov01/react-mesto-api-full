@@ -40,13 +40,12 @@ export default function App() {
 
   // ------------------------------ SIGN CHECK ------------------------------
   const signCheck = useCallback(() => {
-    console.log(' signCheck');
-    setLoading(true);
     const jwt = localStorage.getItem('jwt');
     if (jwt) {
       MestoAuth.checkToken(jwt)
         .then((res) => {
           if (res) {
+            setLoading(true);
             setLoggedIn(true);
             setUserEmail(res.data.email);
             history.push('/main');
@@ -108,6 +107,9 @@ export default function App() {
         setTimeout(() => {
           setInfoToolTipPopupOpen(false);
         }, 2000);
+      })
+      .finally(() => {
+        setLoading(false);
       });
   }
 
@@ -120,10 +122,7 @@ export default function App() {
       .then(() => {
         setIsRegistered(true);
         setInfoToolTipPopupOpen(true);
-        history.push('./sign-in');
-        setTimeout(() => {
-          setInfoToolTipPopupOpen(false);
-        }, 2000);
+        history.push('./signin');
       })
       .catch((err) => {
         setIsRegistered(false);
@@ -139,7 +138,7 @@ export default function App() {
     localStorage.removeItem('jwt');
     setLoggedIn(false);
     setUserEmail('');
-    history.push('/sign-in');
+    history.push('/signin');
   }
 
   // ------------------------------ POPUP HANDLERs ------------------------------
@@ -247,14 +246,14 @@ export default function App() {
           </Route>
           <Switch>
             {/* ----------- Логин ----------- */}
-            <Route path="/sign-in">
-              <Header url="/sign-up" text="Регистрация" />
+            <Route path="/signin">
+              <Header url="/signup" text="Регистрация" />
               <Login onLogin={handleLogin} subText="Регистрация" name="login" />
             </Route>
 
             {/* ----------- Регистрация ----------- */}
-            <Route path="/sign-up">
-              <Header url="/sign-in" text="Войти" />
+            <Route path="/signup">
+              <Header url="/signin" text="Войти" />
               <Register onRegister={handleRegister} subText="Войти" name="register" />
             </Route>
 
@@ -272,7 +271,7 @@ export default function App() {
               onCardDelete={handleCardDelete}
             />
 
-            <Route>{loggedIn ? <Redirect to="/main" /> : <Redirect to="/sign-in" />}</Route>
+            <Route>{loggedIn ? <Redirect to="/main" /> : <Redirect to="/signin" />}</Route>
           </Switch>
           <Footer />
         </div>

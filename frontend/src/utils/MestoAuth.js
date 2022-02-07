@@ -1,4 +1,4 @@
-export const BASE_URL = "https://api.krylov.students.nomoredomains.work/";
+export const BASE_URL = "https://api.krylov.students.nomoredomains.work";
 
 const responseCheck = (response) =>
   response.ok ? response.json() : Promise.reject(`Ошибка ${response.status}`);

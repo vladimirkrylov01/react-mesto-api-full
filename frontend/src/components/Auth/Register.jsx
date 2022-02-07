@@ -55,7 +55,7 @@ const Register = (props) => {
       </form>
       <p className="sign-container__paragraph">
         Уже зарегистрированы ?{" "}
-        <Link className="sign-container__paragraph" to="sign-in">
+        <Link className="sign-container__paragraph" to="signin">
           {props.subText}
         </Link>
       </p>

@@ -3,4 +3,4 @@
 
 ## [Ссылка на frontend](https://krylov.students.nomoredomains.work/)
 
-## [Ссылка на backend](https://api.krylov.students.nomoredomains.work/api)  
+## [Ссылка на backend](https://api.krylov.students.nomoredomains.work)  
