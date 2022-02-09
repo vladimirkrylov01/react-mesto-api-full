@@ -199,7 +199,7 @@ function App() {
                     }
                 })
                 .catch((err) => {
-                    console.log(`Не удалось получить токен: ${err}`)
+                    err.message
                 })
         }
     }
