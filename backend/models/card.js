@@ -28,6 +28,8 @@ const cardSchema = new mongoose.Schema({
       type: mongoose.Schema.Types.ObjectId,
       ref: 'user',
     }],
+    // todo: check default value
+    // default: [],
   },
   createdAt: {
     type: Date,

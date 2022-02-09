@@ -1,5 +1,5 @@
 const bcrypt = require('bcrypt');
-require('validator');
+const validator = require('validator');
 const ConflictError = require('../errors/conflict-error');
 const NotFoundError = require('../errors/not-found-error');
 const ValidationError = require('../errors/validation-error');

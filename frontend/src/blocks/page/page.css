@@ -1,12 +1,9 @@
 .page {
-  background-color: #000000;
-  margin: 0;
+  min-width: 320px;
+  background-color: #000;
   color: #fff;
-  font-family: Inter, Arial, Helvetica, sans-serif;
-  font-style: normal;
-  font-weight: 400;
-  position: relative;
-  flex-direction: column;
+  font-family: 'Inter', Arial, Helvetica, sans-serif;
+  display: flex;
+  justify-content: center;
   min-height: 100vh;
-  /*transition: all ease 1s;*/
 }

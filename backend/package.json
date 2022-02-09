@@ -12,8 +12,6 @@
     "node.js",
     "express"
   ],
-  "author": "Vladimir Krylov",
-  "license": "ISC",
   "devDependencies": {
     "eslint": "^7.32.0",
     "eslint-config-airbnb-base": "^14.2.1",

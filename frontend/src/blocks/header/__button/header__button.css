@@ -1,20 +1,16 @@
 .header__button {
-    color: #A9A9A9;
-    background-color: #000;
-    border: 0;
-    cursor: pointer;
-    transition: opacity 0.2s linear;
-    margin-left: 24px;
-    opacity: 1;
+  margin: 8px 12px ;
+  font-size: 18px;
+  line-height: 1.22;
+  text-decoration: none;
+  color: #fff;
+  transition: opacity .2s linear;
+}
+
+.header__button:last-of-type{
+  margin-right: 0;
 }
 
 .header__button:hover{
-    opacity: 0.6;
-}
-
-@media screen and (max-width: 600px) {
-    .header__button {
-        margin: 0 auto 40px;
-
-    }
+  opacity: 0.6;
 }

@@ -1,100 +1,82 @@
-import PopupWithForm from "./PopupWithForm";
-import {useState, useContext, useEffect} from "react";
-import {CurrentUserContext} from "../contexts/CurrentUserContext";
+import { useState, useEffect, useContext } from 'react';
+import CurrentUserContext from '../contexts/CurrentUserContext';
+import PopupWithForm from './PopupWithForm';
 
-function EditProfilePopup({isOpen, onClose, onUpdateUser}) {
-    const [inputValues, setInputValues] = useState({name: '', info: ''});
-    const [inputValid, setInputValid] = useState({name: false, info: false});
-    const [inputError, setInputError] = useState({name: '', info: ''});
-    const [inputDirty, setInputDirty] = useState({name: false, info: false});
+function EditProfilePopup(props) {
+  const currentUser = useContext(CurrentUserContext);
 
-    //Подписываемся на контекст
-    const currentUser = useContext(CurrentUserContext);
+  const { isOpen, isLoading, onClose } = props;
 
-    // После загрузки текущего пользователя из API
-    // его данные будут использованы в управляемых компонентах.
-    useEffect(() => {
-        if (currentUser && isOpen) {
-            setInputValues({name: currentUser.name, info: currentUser.about});
-            setInputValid({name: false, info: false});
-            setInputError({name: '', info: ''});
-            setInputDirty({name: false, info: false});
-        }
-    }, [currentUser, isOpen]);
+  const [userInfo, setUserInfo] = useState({
+    username: '',
+    job: '',
+  });
 
-    function handleSubmit(e) {
-        // Запрещаем браузеру переходить по адресу формы
-        e.preventDefault();
+  function handleChangeUserInfo(evt) {
+    setUserInfo({
+      ...userInfo,
+      [evt.target.name]: evt.target.value,
+    });
+  }
 
-        // Передаём значения управляемых компонентов во внешний обработчик
-        onUpdateUser({
-            name: inputValues.name,
-            info: inputValues.info,
-        });
-    }
+  function handleSubmit(evt) {
+    evt.preventDefault();
 
-    //Если убрал курсор из инпута
-    function blurHandler(e) {
-        switch (e.target.name) {
-            case 'name':
-                setInputDirty({name: true});
-                break;
-            case 'info':
-                setInputDirty({info: true});
-                break;
-            default:
-                setInputDirty(false);
-                break;
-        }
-    }
+    props.onSetIsLoading(true);
 
-    //Проверка на валидность
-    function checkInputValid(e) {
-        setInputValues({
-            ...inputValues,
-            [e.target.name]: e.target.value
-        });
-        setInputValid({
-            ...inputValid,
-            [e.target.name]: e.target.validity.valid
-        });
-        setInputError({
-            ...inputError,
-            [e.target.name]: e.target.validationMessage
-        });
-    }
+    props.onUpdateUser({
+      name: userInfo.username,
+      about: userInfo.job,
+    });
+  }
 
-    return (
-        <PopupWithForm
-            name={'profile'}
-            title={'Редактировать профиль'}
-            buttonText={'Сохранить'}
-            isOpen={isOpen}
-            onClose={onClose}
-            onSubmit={handleSubmit}
-            isDisabled={(!inputValid.name && inputValues.info.length < 2) || (!inputValid.info && inputValues.name.length < 2)}
-        >
-            <input type="text" placeholder="Имя Фамилия" className={`popup__input popup__input_value_name 
-            ${!inputValid.name && inputDirty.name ? 'popup__input_type_error'
-                : ''}`}
-                   id="name-input" name="name" minLength="2" maxLength="40" required value={inputValues.name}
-                   onBlur={e => blurHandler(e)}
-                   onChange={checkInputValid}/>
-            <span id="name-input-error" className="popup__input-error popup__input-error_active">
-                {inputValid.name && !inputDirty.name ? '' : inputError.name}
-            </span>
-            <input type="text" placeholder="Род деятельности"
-                   className={`popup__input popup__input_value_job 
-            ${!inputValid.info && inputDirty.info ? 'popup__input_type_error'
-                       : ''}`}
-                   id="job-input" name="info" minLength="2" maxLength="200" required value={inputValues.info}
-                   onBlur={e => blurHandler(e)}
-                   onChange={checkInputValid}/>
-            <span id="job-input-error" className="popup__input-error popup__input-error_active">
-                {inputValid.info && !inputDirty.info ? '' : inputError.info}
-            </span>
-        </PopupWithForm>
-    );
+  useEffect(() => {
+    setUserInfo({
+      username: currentUser.name,
+      job: currentUser.about,
+    });
+  }, [currentUser, isOpen]);
+
+  return (
+    <PopupWithForm
+      name="edit-profile"
+      title="Редaктировать профиль"
+      ariaLabel="Сохранить профиль"
+      buttonText="Сохранить"
+      buttonIsLoadingText="Сохранение"
+      isLoading={isLoading}
+      isOpen={isOpen}
+      onClose={onClose}
+      onSubmit={handleSubmit}
+    >
+      <input
+        type="text"
+        id="username-input"
+        name="username"
+        className="form__item form__item_name_username"
+        placeholder="Имя"
+        minLength="2"
+        maxLength="40"
+        value={userInfo.username || ''}
+        onChange={handleChangeUserInfo}
+        required
+      />
+      <span className="username-input-error form__item-error" />
+      <input
+        type="text"
+        id="job-input"
+        name="job"
+        className="form__item form__item_name_job"
+        placeholder="О себе"
+        minLength="2"
+        maxLength="200"
+        value={userInfo.job || ''}
+        onChange={handleChangeUserInfo}
+        required
+      />
+      <span className="job-input-error form__item-error" />
+    </PopupWithForm>
+  );
 }
 
 export default EditProfilePopup;

@@ -5,7 +5,6 @@ const { errors } = require('celebrate');
 const helmet = require('helmet');
 require('dotenv').config();
 const cors = require('cors');
-
 const usersRouter = require('./routes/users.router');
 const cardsRouter = require('./routes/cards.router');
 
@@ -26,15 +25,8 @@ mongoose.connect('mongodb://localhost:27017/mestodb')
 const app = express();
 
 const { PORT = 3000 } = process.env;
-
-app.use(cors({
-  credentials: true,
-  origin: [
-    'http://localhost:3000',
-    'https://krylov.students.nomoredomains.work',
-    'http://krylov.students.nomoredomains.work',
-  ],
-}));
+console.log(cors)
+app.use(cors);
 app.use(helmet());
 app.use(express.json());
 app.use(cookieParser());

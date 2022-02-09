@@ -11,13 +11,13 @@ async function login(req, res, next) {
   try {
     const matchingUser = await User.findOne({ email }).select('+password');
     if (!matchingUser) {
-      return next(new UnauthorizedError('Неправильные почта или пароль'));
+      throw new UnauthorizedError('Неправильные почта или пароль');
     }
 
     const isSame = await bcrypt.compare(password, matchingUser.password);
 
     if (!isSame) {
-      return next(new UnauthorizedError('Неправильные почта или пароль'));
+      throw new UnauthorizedError('Неправильные почта или пароль');
     }
 
     const token = jwt.sign(

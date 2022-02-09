@@ -1,4 +1,4 @@
-function errorsHandler(err, req, res) {
+function errorsHandler(err, req, res, next) {
   const { statusCode = 500, message } = err;
 
   res.status(statusCode).send({
