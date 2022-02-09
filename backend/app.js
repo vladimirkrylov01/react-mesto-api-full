@@ -28,8 +28,6 @@ mongoose.connect('mongodb://localhost:27017/mestodb', {
   if (err) { console.log(err); }
 });
 
-console.log(cors);
-
 app.use(cors);
 
 app.use(bodyParser.json());

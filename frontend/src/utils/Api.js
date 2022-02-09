@@ -20,6 +20,9 @@ class Api{
 
     //Рендер всех карточек на страницу с сервера
     getAllCards() {
+        const { JWT_SECRET, NODE_ENV } = process.env;
+        console.log(`NODE_ENV -> ${NODE_ENV}`);
+        console.log(`JWT_SECRET -> ${JWT_SECRET}`);
         return fetch(`${this._url}cards/`, {
             method: 'GET',
             Authorization: `Bearer ${localStorage.getItem('jwt')}`,

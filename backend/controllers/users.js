@@ -6,6 +6,8 @@ const BadRequestError = require('../errors/BadRequestError');
 const ConflictError = require('../errors/ConflictError');
 
 const { JWT_SECRET, NODE_ENV } = process.env;
+console.log(`NODE_ENV -> ${NODE_ENV}`);
+console.log(`JWT_SECRET -> ${JWT_SECRET}`);
 
 const getUsers = (request, response, next) => User
   .find({})
@@ -130,34 +132,38 @@ const patchAvatar = (request, response, next) => {
     .catch(next);
 };
 
-const login = (req, res, next) => {
-  const { email, password } = req.body;
+const login = async (req, res, next) => {
+  try {
+    const { email, password } = req.body;
 
-  return User.findUserByCredentials(email, password)
-    .then((user) => {
-      // создадим токен
-      const token = jwt.sign(
-        {
-          _id: user._id,
-          email: user.email,
-          name: user.name,
-          about: user.about,
-          avatar: user.avatar,
-        },
-        NODE_ENV === 'production' ? JWT_SECRET : 'some-secret-key',
-        { expiresIn: '7d' },
-      );
-      // вернём токен
-      res
-        // .cookie('jwt', token, {
-        //   maxAge: 3600000 * 24 * 7,
-        //   httpOnly: true,
-        //   sameSite: true,
-        // })
-        // .send({message: 'Успешная авторизация'})
-        .send({ token });
-    })
-    .catch(next);
+    const user = await User.findOne({ email }).select('+password');
+    if (!user) {
+      res.send('Неправильные email/password. Попробуйте еще раз.');
+    }
+
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
+      res.send('Неправильные email/password. Попробуйте еще раз.');
+    }
+    console.log(NODE_ENV);
+    console.log(JWT_SECRET);
+
+    const token = jwt.sign(
+      { _id: user._id },
+      NODE_ENV === 'production' ? JWT_SECRET : 'some-very-secret-code',
+      { expiresIn: '7d' },
+    );
+
+    return res.status(200).send({
+      token,
+      name: user.name,
+      about: user.about,
+      avatar: user.avatar,
+      email: user.email,
+    });
+  } catch (err) {
+    next(err);
+  }
 };
 
 module.exports = {

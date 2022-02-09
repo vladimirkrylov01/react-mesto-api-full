@@ -173,8 +173,7 @@ function App() {
     //Регистрация
     function handleSignUp(email, password) {
         auth.register(email, password)
-            .then(
-                () => {
+            .then(() => {
                     setIsRegistered(true);
                     navigate('/signin');
                 })
@@ -216,6 +215,7 @@ function App() {
         auth.authorize(email, password)
             .then((data) => {
                 localStorage.setItem('jwt', data.token);
+                debugger;
                 handleTokenCheck();
                 setIsLoggedIn(true);
                 setIsAuthorizedEmail(email)
