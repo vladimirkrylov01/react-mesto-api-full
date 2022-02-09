@@ -3,7 +3,6 @@ const TOKEN_SECRET = require('../utils/secret');
 
 const UnauthorizedError = require('../errors/unauthorized-error');
 
-
 function authorize(req, res, next) {
   const token = req.cookies.jwt;
   if (!token) {

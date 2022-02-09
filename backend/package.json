@@ -4,14 +4,24 @@
   "description": "Сервер для проекта 'Место'",
   "main": "app.js",
   "scripts": {
-    "lint": "npx eslint . --fix",
+    "lint": "npx eslint .",
     "start": "node app.js",
     "dev": "nodemon app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/shvartem/express-mesto.git"
   },
   "keywords": [
     "node.js",
     "express"
   ],
+  "author": "Artem Shalaginov",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/shvartem/express-mesto/issues"
+  },
+  "homepage": "https://github.com/shvartem/express-mesto#readme",
   "devDependencies": {
     "eslint": "^7.32.0",
     "eslint-config-airbnb-base": "^14.2.1",
