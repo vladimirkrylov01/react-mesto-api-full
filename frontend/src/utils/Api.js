@@ -22,6 +22,7 @@ class Api{
     getAllCards() {
         return fetch(`${this._url}cards/`, {
             method: 'GET',
+            Authorization: `Bearer ${localStorage.getItem('jwt')}`,
             headers: this._getHeaders()
         })
             .then(this._checkResponse)
@@ -31,6 +32,7 @@ class Api{
         return fetch(`${this._url}cards/`, {
             method: 'POST',
             headers: this._getHeaders(),
+            Authorization: `Bearer ${localStorage.getItem('jwt')}`,
             body: JSON.stringify({
                 name: data.name,
                 link: data.link
@@ -43,6 +45,7 @@ class Api{
         return fetch(`${this._url}users/me/avatar`, {
             method: 'PATCH',
             headers: this._getHeaders(),
+            Authorization: `Bearer ${localStorage.getItem('jwt')}`,
             body: JSON.stringify({
                 avatar: data.avatar
             })
@@ -107,6 +110,7 @@ const api = new Api({
     url: "https://api.krylov.students.nomoredomains.work/",
     // url: "http://localhost:3001/",
     headers: {
+        Authorization: `Bearer ${localStorage.getItem('jwt')}`,
         "content-type": "application/json"
     }
 });
