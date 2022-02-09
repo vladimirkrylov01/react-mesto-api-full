@@ -1,10 +1,9 @@
-.header__logo{
-    cursor: pointer;
+.header__logo {
+  max-width: 142px;
 }
 
-@media screen and (max-width: 1023px){
-    .header__logo{
-        width: 103px;
-        height: 24px;
-    }
+@media screen and (max-width: 350px) {
+  .header__logo {
+    max-width: 104px;
+  } 
 }
