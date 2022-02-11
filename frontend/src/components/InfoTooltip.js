@@ -1,36 +1,28 @@
-import React from 'react';
-import successfulAuthImage from '../images/successful-auth.svg';
-import failedAuthImage from '../images/failed-auth.svg';
+import iconSuccess from '../images/check.svg'
+import iconError from '../images/err.svg'
 
-function InfoToolTip(props) {
-  const {
-    name, isOpen, onSuccessRegister, onClose,
-  } = props;
+function InfoTooltip({onClose, isOpen, text, icon}) {
 
-  return (
-    <div
-      className={`popup popup_type_${name} ${isOpen ? 'popup_opened' : ''}`}
-      onMouseDown={onClose}
-    >
-      <div className="popup__container">
-        <button
-          type="button"
-          className="popup__close"
-          aria-label="Закрыть окно"
-        />
-        <img
-          src={onSuccessRegister ? successfulAuthImage : failedAuthImage}
-          alt=""
-          className="popup__auth-image"
-        />
-        <p className="popup__auth-result">
-          {onSuccessRegister
-            ? 'Вы успешно зарегистрировались!'
-            : 'Что-то пошло не так! Попробуйте ещё раз.'}
-        </p>
-      </div>
-    </div>
-  );
+    const handleOverlayClose = (e) => {
+        if (e.target === e.currentTarget && isOpen) {
+            onClose();
+        }
+    };
+
+    const icons = {
+        success: iconSuccess,
+        error: iconError
+    }
+
+    return(
+        <section className={(`popup ${isOpen ? 'popup_opened' : ''}`)} onMouseDown={handleOverlayClose}>
+            <form className='popup__content'>
+                <img className='popup__icon' src={icons[icon]} alt='icon'/>
+                <button type="button" className="popup__close-button" aria-label="закрыть" onClick={onClose}/>
+                <h3 className='popup__header'>{text}</h3>
+            </form>
+        </section>
+    )
 }
 
-export default InfoToolTip;
+export default InfoTooltip;

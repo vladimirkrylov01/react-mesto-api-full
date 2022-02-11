@@ -1,59 +1,81 @@
+// app
 const express = require('express');
-const mongoose = require('mongoose');
-const cookieParser = require('cookie-parser');
-const { errors } = require('celebrate');
-const helmet = require('helmet');
 require('dotenv').config();
-const cors = require('cors');
-const usersRouter = require('./routes/users.router');
-const cardsRouter = require('./routes/cards.router');
 
-const { authorize } = require('./middlewares/auth.middleware');
-const { errorsHandler } = require('./middlewares/errors.miggleware');
-const { createNewUser } = require('./controllers/users.controller');
-const { login } = require('./controllers/login.controller');
-const { newUserValidation, loginUserValidation } = require('./utils/validation-requests');
-
-const NotFoundError = require('./errors/not-found-error');
-const { requestLogger, errorLogger } = require('./middlewares/logger');
-const { logout } = require('./controllers/logout.controller');
-
-mongoose.connect('mongodb://localhost:27017/mestodb')
-  .then(() => console.log('Connected to Database'))
-  .catch((error) => console.log({ errorMessage: error.message }));
-
+console.log(process.env.NODE_ENV);
+const { port = 3000 } = process.env;
 const app = express();
+const bodyParser = require('body-parser');
+const mongoose = require('mongoose');
+const { celebrate, Joi, errors } = require('celebrate');
+const cookieParser = require('cookie-parser');
+const cors = require('cors');
 
-const { PORT = 3000 } = process.env;
-console.log(cors);
-app.use(cors);
-app.use(helmet());
-app.use(express.json());
+const userRoute = require('./routes/users');
+const cardRoute = require('./routes/cards');
+const { login } = require('./controllers/login');
+const { createUser } = require('./controllers/users');
+const { auth } = require('./middlewares/auth');
+const Err404 = require('./errors/Err404');
+const { requestLogger, errorLogger } = require('./middlewares/logger');
+
+mongoose.connect('mongodb://localhost:27017/mestodb', { useNewUrlParser: true });
+
+app.use(cors({
+    origin: [
+        'http://mesto.dom.nomoredomains.rocks',
+        'https://mesto.dom.nomoredomains.rocks',
+        'http://api.mesto.dom.nomoredomains.rocks',
+        'https://mesto.dom.nomoredomains.rocks',
+        'http://localhost:3000',
+    ],
+    credentials: true,
+    methods: 'GET, PUT, PATCH, POST, DELETE',
+}));
 app.use(cookieParser());
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(requestLogger);
 
 app.get('/crash-test', () => {
-  setTimeout(() => {
-    throw new Error('Сервер сейчас упадёт');
-  }, 0);
+    setTimeout(() => {
+        throw new Error('Сервер сейчас упадёт');
+    }, 0);
+});
+app.post('/signin', celebrate({
+    body: Joi.object().keys({
+        email: Joi.string().required().email(),
+        password: Joi.string().required(),
+    }),
+}), login);
+app.post('/signup', celebrate({
+    body: Joi.object().keys({
+        name: Joi.string().min(2).max(30),
+        about: Joi.string().min(2).max(30),
+        avatar: Joi.string().regex(/https?:\/\/(w{3}.)?[\w-]+\.\S+[^><]/),
+        email: Joi.string().required().email(),
+        password: Joi.string().required(),
+    }),
+}), createUser);
+
+// routes requiring authorization:
+app.use(auth);
+app.use('/users', userRoute);
+app.use('/cards', cardRoute);
+
+app.use('*', (req, res, next) => {
+    next(new Err404('Page not found'));
 });
 
-app.use('/signin', loginUserValidation, login);
-app.use('/signup', newUserValidation, createNewUser);
-
-app.use(authorize);
-
-app.delete('/logout', logout);
-app.use('/users', usersRouter);
-app.use('/cards', cardsRouter);
-
-app.use((req, res, next) => next(new NotFoundError('Неверный запрос')));
-
+// errors
 app.use(errorLogger);
-
 app.use(errors());
-app.use(errorsHandler);
+app.use((err, req, res, next) => {
+    const { statusCode = 500, message } = err;
+    res.status(statusCode).send({ message: statusCode === 500 ? err.message : message });
+    next();
+});
 
-app.listen(PORT, () => {
-  console.log(`Server started on http://localhost:${PORT}`);
+app.listen(port, () => {
+    console.log(`App listening on port ${port}`);
 });

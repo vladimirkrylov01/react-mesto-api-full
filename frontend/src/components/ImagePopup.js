@@ -1,40 +1,38 @@
-import { useRef } from 'react';
+import React from "react";
 
-function ImagePopup(props) {
-  const { card, isOpen, onClose } = props;
+function ImagePopup({ card, onClose }) {
 
-  const imageFallbackContainer = useRef(null);
+    const isOpen = !!card;
 
-  return (
-    <div
-      className={`popup popup_type_image ${isOpen ? 'popup_opened' : ''}`}
-      onMouseDown={onClose}
-    >
-      <div className="popup__container popup__container_type_image">
-        <button
-          type="button"
-          className="popup__close"
-          aria-label="Закрыть окно редактирования"
-        />
-        <figure className="figure" ref={imageFallbackContainer}>
-          {card && (
-            <img
-              src={card ? card.link : ''}
-              alt={card ? card.name : ''}
-              className="figure__image"
-              onLoad={(evt) => {
-                imageFallbackContainer.current.style.width = `${evt.target.offsetWidth}px`;
-                imageFallbackContainer.current.style.height = `${evt.target.offsetHeight}px`;
-              }}
-            />
-          )}
-          <figcaption className="figure__caption">
-            {card ? card.name : ''}
-          </figcaption>
-        </figure>
-      </div>
-    </div>
-  );
+    React.useEffect(() => {
+        if (!isOpen) return;
+        const handleEsc = (e) => {
+            if (e.key === "Escape") {
+                onClose()
+            }
+        }
+        document.addEventListener('keydown', handleEsc);
+        return () => {
+            document.removeEventListener('keydown', handleEsc)
+        }
+    }, [isOpen, onClose])
+
+    const handleOverlayClose = (e) => {
+        if (e.target === e.currentTarget && isOpen) {
+            onClose();
+        }
+    };
+    return (
+        <section className={`popup popup popup_full-photo ${card && 'popup_opened'}`} onMouseDown={handleOverlayClose}>
+            <div className="full-photo">
+                <button type="button" className="popup__close-button popup__close-button-full-photo"
+                    aria-label="закрыть"
+                    onClick={onClose}
+                />
+                <img className="full-photo__image" src={card?.link} alt={card?.name} />
+                <p className="full-photo__place">{card?.name}</p>
+            </div>
+        </section>
+    )
 }
-
 export default ImagePopup;

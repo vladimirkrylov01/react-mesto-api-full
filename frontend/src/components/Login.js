@@ -1,65 +1,48 @@
-import { useState, useEffect } from 'react';
+import React from "react";
 
-function Login({
-  loggedIn, setSuccessRegister, onLogin, setCurrentRoute, history,
-}) {
-  const [loginData, setLoginData] = useState({
-    email: '',
-    password: '',
-  });
+function Login({ onLogin }) {
 
-  function handleChangeLoginData(evt) {
-    const { name, value } = evt.target;
+    const [email, setEmail] = React.useState('');
+    const [password, setPassword] = React.useState('');
 
-    setLoginData({
-      ...loginData,
-      [name]: value,
-    });
-  }
+    function handleEmailChange(e) {
+        setEmail(e.target.value);
+    }
+    function handlePassChange(e) {
+        setPassword(e.target.value);
+    }
 
-  function handleSubmit(evt) {
-    evt.preventDefault();
+    function handleSubmit(e) {
+        e.preventDefault();
+        onLogin({ email, password })
+    }
+    return (
+        <form className='login' onSubmit={handleSubmit}>
+            <h3 className='login__header'>Вход</h3>
 
-    onLogin({ loginData, setLoginData });
-  }
+            <input type="email"
+                className="login__field"
+                placeholder="Email"
+                name="email"
+                id="email"
+                value={email}
+                minLength="2"
+                maxLength="30"
+                onChange={handleEmailChange}
+                required />
 
-  useEffect(() => {
-    if (loggedIn) history.push('/');
-  }, [loggedIn]);
+            <input type="password"
+                className="login__field"
+                name="password"
+                id="password"
+                value={password}
+                placeholder="Пароль"
+                onChange={handlePassChange}
+                required />
 
-  useEffect(() => {
-    setSuccessRegister(false);
-    setCurrentRoute('/signin');
-  }, []);
-
-  return (
-    <div className="sign__container">
-      <form action="/signin" className="form" onSubmit={handleSubmit}>
-        <h3 className="form__title form__title_place_sign">Вход</h3>
-        <fieldset className="form__input-container form__input-container">
-          <input
-            type="email"
-            className="form__item form__item_place_sign"
-            placeholder="Email"
-            name="email"
-            value={loginData.email || ''}
-            onChange={handleChangeLoginData}
-          />
-
-          <input
-            type="password"
-            className="form__item form__item_place_sign"
-            placeholder="Пароль"
-            name="password"
-            value={loginData.password || ''}
-            onChange={handleChangeLoginData}
-          />
-        </fieldset>
-
-        <button type="submit" className="form__submit form__button_place_sign">Войти</button>
-      </form>
-    </div>
-  );
+            <button type="submit" className=" button login__submit-button">Войти</button>
+        </form>
+    )
 }
 
 export default Login;

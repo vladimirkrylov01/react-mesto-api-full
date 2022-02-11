@@ -1,16 +1,10 @@
 .header__button {
-  margin: 8px 12px ;
-  font-size: 18px;
-  line-height: 1.22;
-  text-decoration: none;
-  color: #fff;
-  transition: opacity .2s linear;
-}
-
-.header__button:last-of-type{
-  margin-right: 0;
-}
-
-.header__button:hover{
-  opacity: 0.6;
+    margin: 0;
+    padding: 0;
+    color: white;
+    font-size: 18px;
+    font-weight: normal;
+    line-height: 1.22;
+    margin-left: 24px;
+    border: none;
 }

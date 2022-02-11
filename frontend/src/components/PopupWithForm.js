@@ -1,46 +1,37 @@
-import React from 'react';
+import React from "react"
 
-function PopupWithForm(props) {
-  const {
-    name,
-    title,
-    ariaLabel,
-    buttonText,
-    buttonIsLoadingText,
-    isLoading,
-    isOpen,
-    onClose,
-    onSubmit,
-    children,
-  } = props;
+function PopupWithForm({name, isOpen, onSubmit, title, children, button, onClose}) {
 
-  return (
-    <div
-      className={`popup popup_type_${name} ${isOpen ? 'popup_opened' : ''}`}
-      onMouseDown={onClose}
-    >
-      <div className="popup__container">
-        <button
-          type="button"
-          className="popup__close"
-          aria-label="Закрыть окно"
-        />
-        <form
-          action="#"
-          method="POST"
-          name={name}
-          className="form"
-          onSubmit={onSubmit}
-        >
-          <h3 className="form__title">{title}</h3>
-          <fieldset className="form__input-container">{children}</fieldset>
-          <button type="submit" className="form__submit" aria-label={ariaLabel}>
-            {isLoading ? buttonIsLoadingText : buttonText}
-          </button>
-        </form>
-      </div>
-    </div>
-  );
+    const popupClassName = (`popup popup_${name} ${isOpen ? 'popup_opened' : ''}`)
+
+    React.useEffect(() => {
+        if (!isOpen) return;
+        const handleEsc = (e) => {
+            if (e.key === "Escape") {
+                onClose()
+            }
+        }
+        document.addEventListener('keydown', handleEsc);
+        return () => {
+            document.removeEventListener('keydown', handleEsc)
+        }
+    }, [isOpen, onClose])
+
+    const handleOverlayClose = (e) => {
+        if (e.target === e.currentTarget && isOpen) {
+          onClose();
+        }
+      };
+
+    return (
+        <section className={popupClassName} onMouseDown={handleOverlayClose}>
+            <form className='popup__content' name={name} onSubmit={onSubmit}>
+                <h3 className='popup__header'>{title}</h3>
+                {children}
+                <button type="submit" className="popup__submit-button">{button}</button>
+                <button type="button" className="popup__close-button" aria-label="закрыть" onClick={onClose}/>
+            </form>
+        </section>
+    )
 }
-
-export default PopupWithForm;
+export default PopupWithForm

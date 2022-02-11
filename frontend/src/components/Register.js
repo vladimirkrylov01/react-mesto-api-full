@@ -1,77 +1,50 @@
-import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import React from "react";
 
-function Register({
-  isAuthPopupOpen, setIsAuthPopupOpen, successRegister, onRegister, setCurrentRoute, history,
-}) {
-  const [registerData, setRegisterData] = useState({
-    email: '',
-    password: '',
-  });
+function Register({ onRegister }) {
 
-  function handleChangeRegisterData(evt) {
-    const { name, value } = evt.target;
+    const [email, setEmail] = React.useState('');
+    const [password, setPassword] = React.useState('');
 
-    setRegisterData({
-      ...registerData,
-      [name]: value,
-    });
-  }
+    function handleEmailChange(e) {
+        setEmail(e.target.value);
+    }
+    function handlePassChange(e) {
+        setPassword(e.target.value);
+    }
 
-  function handleSubmit(evt) {
-    evt.preventDefault();
+    function handleSubmit(e) {
+        e.preventDefault();
+        onRegister({ email, password })
+    }
 
-    onRegister({ registerData, setRegisterData });
-  }
+    return (
+        <form className='login' onSubmit={handleSubmit}>
+            <h3 className='login__header'>Регистрация</h3>
 
-  // эффект для перенаправления на страницу с авторизацией
-  // после удачной регистрации и закрытия попапа InfoToolTip
+            <input type="email"
+                className="login__field"
+                placeholder="Email"
+                name="email"
+                id="email"
+                value={email}
+                minLength="2"
+                maxLength="30"
+                onChange={handleEmailChange}
+                required />
 
-  useEffect(() => {
-    if (successRegister && !isAuthPopupOpen) history.push('/signin');
-  }, [successRegister, isAuthPopupOpen, history]);
+            <input type="password"
+                className="login__field"
+                name="password"
+                id="password"
+                value={password}
+                placeholder="Пароль"
+                onChange={handlePassChange}
+                required />
 
-  useEffect(() => {
-    setCurrentRoute('/signup');
-  }, []);
-
-  return (
-    <div className="sign__container">
-      <form action="/signup" className="form" onSubmit={handleSubmit}>
-        <h3 className="form__title form__title_place_sign">Регистрация</h3>
-        <fieldset className="form__input-container form__input-container">
-          <input
-            type="email"
-            className="form__item form__item_place_sign"
-            placeholder="Email"
-            name="email"
-            value={registerData.email || ''}
-            onChange={handleChangeRegisterData}
-          />
-
-          <input
-            type="password"
-            className="form__item form__item_place_sign"
-            placeholder="Пароль"
-            name="password"
-            value={registerData.password || ''}
-            onChange={handleChangeRegisterData}
-          />
-        </fieldset>
-
-        <button type="submit" className="form__submit form__button_place_sign">
-          Зарегистрироваться
-        </button>
-      </form>
-      <p className="sign__registred">
-        Уже зарегистрированы?
-        {' '}
-        <Link to="/signin" rel="noreferrer" className="sign__login-link">
-          Войти
-        </Link>
-      </p>
-    </div>
-  );
+            <button type="submit" className=" button login__submit-button">Зарегистрироваться</button>
+            <a href="/sign-in" className="login__redirect-link">Уже зарегистрированы? Войти</a>
+        </form>
+    )
 }
 
 export default Register;

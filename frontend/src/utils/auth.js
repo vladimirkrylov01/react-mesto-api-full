@@ -1,53 +1,43 @@
-import { BASE_AUTH_URL } from './constants';
+export const base_url = `https://api.mesto.dom.nomoredomains.rocks`
 
-function checkResponseStatus(res) {
-  if (res.ok) return res.json();
-
-  return Promise.reject(`Ошибка: ${res.status}, ${res.statusText}`);
+function _returnResultStatus(res) {
+    if (res.ok) {
+        return res.json();
+    } return Promise.reject(`Не получилось: ${res.status}${res.statusText} type:${res.type} and ${res.headers}`);
 }
 
-export function register(userData) {
-  return fetch(`${BASE_AUTH_URL}/signup`, {
-    method: 'POST',
-    credentials: 'include',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(userData),
-  })
-    .then(checkResponseStatus);
+export const register = (email, password) => {
+    return fetch(`${base_url}/signup`, {
+        method: 'POST',
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ email, password }),
+    })
+        .then((res) => _returnResultStatus(res))
 }
 
-export function authorize(userData) {
-  return fetch(`${BASE_AUTH_URL}/signin`, {
-    method: 'POST',
-    credentials: 'include',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(userData),
-  })
-    .then(checkResponseStatus);
+export const login = (email, password) => {
+    return fetch(`${base_url}/signin`, {
+        credentials: 'include',
+        method: 'POST',
+        headers: {
+            'Accept': 'application/json',
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ email, password })
+    })
+        .then((res) => _returnResultStatus(res))
 }
 
-export function getLoggedUser() {
-  return fetch(`${BASE_AUTH_URL}/users/me`, {
-    method: 'GET',
-    credentials: 'include',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-  })
-    .then(checkResponseStatus);
-}
-
-export function logout() {
-  return fetch(`${BASE_AUTH_URL}/logout`, {
-    method: 'DELETE',
-    credentials: 'include',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-  })
-    .then(checkResponseStatus);
+export const userCheck = (token) => {
+    return fetch(`${base_url}/users/me`, {
+        method: 'GET',
+        credentials: 'include',
+        headers: {
+            "Content-Type": "application/json",
+            'Accept': 'application/json'
+        }
+    })
+        .then((res) => _returnResultStatus(res))
 }
