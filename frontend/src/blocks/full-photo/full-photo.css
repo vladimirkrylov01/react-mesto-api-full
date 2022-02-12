@@ -1,8 +1,0 @@
-.full-photo {
-    display: flex;
-    margin: 90px auto auto;
-    flex-direction: column;
-    align-items: center;
-    width: max-content;
-    position: relative;
-}
