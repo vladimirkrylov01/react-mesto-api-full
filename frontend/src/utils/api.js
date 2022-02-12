@@ -96,7 +96,6 @@ class Api {
 }
 
 const apiMesto = new Api({
-    address: `https://api.mesto.dom.nomoredomains.rocks`,
     headers: {
         'Content-Type': 'application/json',
         'Accept': 'application/json',
