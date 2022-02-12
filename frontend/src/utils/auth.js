@@ -1,4 +1,3 @@
-export const base_url = `https://api.mesto.dom.nomoredomains.rocks`
 
 function _returnResultStatus(res) {
     if (res.ok) {
