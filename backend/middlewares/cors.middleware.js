@@ -1,5 +1,6 @@
 const allowedCors = [
   'http://localhost:3000',
+  'http://localhost:3001',
   'http://krylov.students.nomoredomains.work',
   'https://krylov.students.nomoredomains.work',
 ];
@@ -13,7 +14,7 @@ const cors = (req, res, next) => {
   const DEFAULT_ALLOWED_METHODS = 'GET,HEAD,PUT,PATCH,POST,DELETE';
   if (allowedCors.includes(origin)) {
     // устанавливаем заголовок, который разрешает браузеру запросы с этого источника
-    res.header('Access-Control-Allow-Origin', 'https://krylov.students.nomoredomains.work');
+    res.header('Access-Control-Allow-Origin', origin);
     res.header('Access-Control-Allow-Credentials', true);
   }
   if (method === 'OPTIONS') {
