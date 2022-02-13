@@ -4,7 +4,10 @@ const cookieParser = require('cookie-parser');
 const { errors } = require('celebrate');
 const helmet = require('helmet');
 require('dotenv').config();
-const cors = require('cors');
+// const cors = require('cors');
+
+const bodyParser = require('express');
+const cors = require('./middlewares/cors.middleware');
 
 const usersRouter = require('./routes/users.router');
 const cardsRouter = require('./routes/cards.router');
@@ -19,25 +22,20 @@ const NotFoundError = require('./errors/not-found-error');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 const { logout } = require('./controllers/logout.controller');
 
+const { PORT = 3000 } = process.env;
+
+const app = express();
+
 mongoose.connect('mongodb://localhost:27017/mestodb')
   .then(() => console.log('Connected to Database'))
   .catch((error) => console.log({ errorMessage: error.message }));
 
-const app = express();
-
-const { PORT = 3000 } = process.env;
-
-app.use(cors({
-  credentials: true,
-  origin: [
-    'http://localhost:3000',
-    'https://krylov.students.nomoredomains.work',
-    'http://krylov.students.nomoredomains.work',
-  ],
-}));
+app.use(cors);
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(cookieParser());
 app.use(helmet());
 app.use(express.json());
-app.use(cookieParser());
 app.use(requestLogger);
 
 app.get('/crash-test', () => {
