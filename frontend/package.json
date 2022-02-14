@@ -1,0 +1,43 @@
+{
+  "name": "react-mesto-api-full",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@testing-library/jest-dom": "^5.15.0",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "react-router-dom": "^6.0.2",
+    "react-scripts": "4.0.3",
+    "web-vitals": "^1.1.2"
+  },
+  "scripts": {
+    "predeploy": "npm run build",
+    "deploy": "npm run build && scp -r ./build/* praktikum@84.201.130.204:/home/praktikum/frontend",
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "./node_modules/.bin/jest",
+    "update-snapshot": "jest --updateSnapshot",
+    "eject": "react-scripts eject"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "devDependencies": {
+    "jest-cli": "^27.4.5",
+    "react-test-renderer": "^17.0.2"
+  },
+  "jest": {
+    "transform": {
+      "^.+\\.(js|jsx)$": "babel-jest"
+    }
+  }
+}
