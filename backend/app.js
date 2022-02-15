@@ -35,7 +35,8 @@ app.use(
   cors({
     origin: [
       'https://krylov.students.nomoredomains.work',
-      'https://krylov.students.nomoredomains.work',
+      'http://krylov.students.nomoredomains.work',
+      'http://localhost:3000',
     ],
     methods: ['GET', 'PUT', 'POST', 'DELETE'],
     allowedHeaders: ['Authorization', 'Content-Type'],

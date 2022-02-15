@@ -39,7 +39,7 @@ function App() {
   const [isSuccess, setIsSuccess] = React.useState(false);
   // const [isLoading, setIsLoading] = React.useState(false);
 
-  React.useEffect(() => {  
+  React.useEffect(() => {
     if(isLoggedIn) {
       // setIsLoading(true);
     Promise.all([api.getUserData(), api.getInitialCards()])
@@ -89,7 +89,7 @@ function App() {
         .catch((err) => {
           if (err.status === 401) {
             console.log("401 — Токен не передан или передан не в том формате");
-          }       
+          }
         });
     }, [history]);
 
@@ -193,14 +193,14 @@ function App() {
       .then(() => {
         setInfoToolTipPopupOpen(true);
         setIsSuccess(true);
-        history.push("/sign-in");
+        history.push("/signin");
       })
       .catch((err) => {
         if (err.status === 400) {
           console.log("400 - некорректно заполнено одно из полей");
         }
         setIsSuccess(false);
-        setInfoToolTipPopupOpen(true);        
+        setInfoToolTipPopupOpen(true);
       });
   }
 
@@ -220,7 +220,7 @@ function App() {
           console.log("401 - пользователь с email не найден");
         }
         setIsSuccess(false);
-        setInfoToolTipPopupOpen(true);        
+        setInfoToolTipPopupOpen(true);
       });
   }
 
@@ -229,11 +229,11 @@ function App() {
     .then(() => {
       setIsLoggedIn(false);
       setEmail('');
-      history.push("/sign-in");
+      history.push("/signin");
     })
     .catch((err) => {
       console.log(`Ошибка при выходе из приложения. ${err}`);
-    })    
+    })
   }
 
   return (
@@ -253,17 +253,17 @@ function App() {
               onAddPlace={handleAddPlaceClick}
               onCardClick={handleCardClick}
               onCardLike={handleCardLike}
-              onCardDelete={handleCardDelete}                        
+              onCardDelete={handleCardDelete}
               // isLoading={isLoading}
             />
-            <Route path="/sign-in">
+            <Route path="/signin">
               <Login onLogin={handleLoginSubmit} />
             </Route>
-            <Route path="/sign-up">
+            <Route path="/signup">
               <Register onRegister={handleRegisterSubmit} />
             </Route>
             <Route>
-              {isLoggedIn ? <Redirect to="/" /> : <Redirect to="/sign-in" />}
+              {isLoggedIn ? <Redirect to="/" /> : <Redirect to="/signin" />}
             </Route>
           </Switch>
 
