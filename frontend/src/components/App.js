@@ -290,7 +290,7 @@ function App() {
               currentRoute={currentRoute}
             />
             <Switch>
-              <Route path="/sign-in">
+              <Route path="/signin">
                 <Login
                   onLogin={handleAuthorize}
                   loggedIn={loggedIn}
@@ -300,7 +300,7 @@ function App() {
                 />
               </Route>
 
-              <Route path="/sign-up">
+              <Route path="/signup">
                 <Register
                   isAuthPopupOpen={isAuthPopupOpen}
                   setIsAuthPopupOpen={setIsAuthPopupOpen}

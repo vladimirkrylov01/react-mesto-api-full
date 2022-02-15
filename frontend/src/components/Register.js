@@ -66,7 +66,7 @@ function Register({
       <p className="sign__registred">
         Уже зарегистрированы?
         {' '}
-        <Link to="/sign-in" rel="noreferrer" className="sign__login-link">
+        <Link to="/signin" rel="noreferrer" className="sign__login-link">
           Войти
         </Link>
       </p>

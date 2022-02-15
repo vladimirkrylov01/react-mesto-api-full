@@ -37,7 +37,7 @@ function Header(props) {
           <>
             {(currentRoute === '/signin') ? (
               <Link
-                to="/sign-up"
+                to="/signup"
                 rel="noreferrer"
                 className="header__button header__button_type_register"
               >
@@ -45,7 +45,7 @@ function Header(props) {
               </Link>
             ) : (
               <Link
-                to="/sign-in"
+                to="/signin"
                 rel="noreferrer"
                 className="header__button header__button_type_login"
               >
