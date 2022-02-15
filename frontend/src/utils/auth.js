@@ -11,6 +11,7 @@ export function register(userData) {
     method: 'POST',
     credentials: 'include',
     headers: {
+      'Accept': 'application/json',
       'Content-Type': 'application/json',
     },
     body: JSON.stringify(userData),
@@ -23,6 +24,7 @@ export function authorize(userData) {
     method: 'POST',
     credentials: 'include',
     headers: {
+      'Accept': 'application/json',
       'Content-Type': 'application/json',
     },
     body: JSON.stringify(userData),
@@ -35,6 +37,7 @@ export function getLoggedUser() {
     method: 'GET',
     credentials: 'include',
     headers: {
+      'Accept': 'application/json',
       'Content-Type': 'application/json',
     },
   })
@@ -46,6 +49,7 @@ export function logout() {
     method: 'DELETE',
     credentials: 'include',
     headers: {
+      'Accept': 'application/json',
       'Content-Type': 'application/json',
     },
   })

@@ -240,15 +240,15 @@ function App() {
   }
 
   // эффект запроса и установки данных пользователя
-  useEffect(() => {
-    api
-      .getUserInfoFromServer()
-      .then((user) => {
-        setCurrentUser(user);
-        setLoggedIn(true);
-      })
-      .catch(console.error);
-  }, []);
+  // useEffect(() => {
+  //   api
+  //     .getUserInfoFromServer()
+  //     .then((user) => {
+  //       setCurrentUser(user);
+  //       setLoggedIn(true);
+  //     })
+  //     .catch(console.error);
+  // }, []);
 
   // эффект запроса и установки данных пользователя и всех карточек
   useEffect(() => {
@@ -257,6 +257,12 @@ function App() {
         .getInitialCardsFromServer()
         .then((cards) => {
           setCurrentCards(cards.reverse());
+        })
+        .catch(console.error);
+      api.getUserInfoFromServer()
+        .then((user) => {
+          setCurrentUser(user);
+          setLoggedIn(true);
         })
         .catch(console.error);
     }
