@@ -1,55 +1,45 @@
-const BASE_URL = "https://api.krylov.students.nomoredomains.work";
+import { BASE_URL } from "./constants";
 
-function checkResponse(res) {
-  if (res.ok) {
-    return res.json();
-  }
-  return Promise.reject(`${res.status}`);
+const resCheck = (res) => res.ok ? res.json() : Promise.reject(`Ошибка: ${res.status}`);
+
+export const signup = (email, password) => {
+  return fetch(`${BASE_URL}/signup`, {
+    method: 'POST',
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      email,
+      password,
+    }),
+  })
+    .then(resCheck);
+};
+
+export const signin = (email, password) => {
+  return fetch(`${BASE_URL}/signin`, {
+    method: 'POST',
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      email,
+      password,
+    }),
+  })
+    .then(resCheck);
 }
 
-export const register = (email, password) => {
-  return fetch(`${BASE_URL}/signup`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      email: email,
-      password: password,
-    }),
-  })
-    .then(checkResponse)
-};
-
-export const login = (email, password) => {
-  return fetch(`${BASE_URL}/signin`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    credentials: "include",
-    body: JSON.stringify({
-      email: email,
-      password: password,
-    }),
-  })
-    .then(checkResponse)
-};
-
-export const checkToken = () => {
+export const getCurrentUserInfo = (token) => {
   return fetch(`${BASE_URL}/users/me`, {
-    method: "GET",
+    method: 'GET',
     headers: {
+      'Accept': 'application/json',
       "Content-Type": "application/json",
-    },
-    credentials: 'include',
+      "Authorization" : `Bearer ${token}`
+    }
   })
-    .then(checkResponse)
-};
-
-export const signOut = () => {
-  return fetch(`${BASE_URL}/signout`, {
-      method: "DELETE",
-      credentials: "include",
-  }).then((res) => checkResponse(res));
-};
+    .then(resCheck);
+}

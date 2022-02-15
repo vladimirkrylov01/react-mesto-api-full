@@ -1,2 +1,4 @@
 import React from 'react';
-export const CurrentUserContext = React.createContext();
+// import profilePhoto from '../images/profile-photo.jpg';
+
+export const CurrentUserContext = React.createContext()
