@@ -1,77 +1,57 @@
-import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link} from 'react-router-dom';
+import {useState} from "react";
+import SignPopup from "./SignPopup";
 
-function Register({
-  isAuthPopupOpen, setIsAuthPopupOpen, successRegister, onRegister, setCurrentRoute, history,
-}) {
-  const [registerData, setRegisterData] = useState({
-    email: '',
-    password: '',
-  });
 
-  function handleChangeRegisterData(evt) {
-    const { name, value } = evt.target;
+function Register({isOpen, onClose, onAddUser}) {
 
-    setRegisterData({
-      ...registerData,
-      [name]: value,
-    });
-  }
+    const linkToEntry = (
+        <p
+            className="sign__description"
+        >
+            Уже зарегистрированы? <Link className="sign__link" to="/signin">Войти</Link>
+        </p>
+    )
 
-  function handleSubmit(evt) {
-    evt.preventDefault();
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
 
-    onRegister({ registerData, setRegisterData });
-  }
+    function handleEmailChange(e) {
+        setEmail(e.target.value);
+    }
 
-  // эффект для перенаправления на страницу с авторизацией
-  // после удачной регистрации и закрытия попапа InfoToolTip
+    function handlePasswordChange(e) {
+        setPassword(e.target.value);
+    }
 
-  useEffect(() => {
-    if (successRegister && !isAuthPopupOpen) history.push('/signin');
-  }, [successRegister, isAuthPopupOpen, history]);
+    function handleSubmit(e) {
+        e.preventDefault();
+        onAddUser(email, password);
+    }
 
-  useEffect(() => {
-    setCurrentRoute('/signup');
-  }, []);
-
-  return (
-    <div className="sign__container">
-      <form className="form" onSubmit={handleSubmit}>
-        <h3 className="form__title form__title_place_sign">Регистрация</h3>
-        <fieldset className="form__input-container form__input-container">
-          <input
-            type="email"
-            className="form__item form__item_place_sign"
-            placeholder="Email"
-            name="email"
-            value={registerData.email || ''}
-            onChange={handleChangeRegisterData}
-          />
-
-          <input
-            type="password"
-            className="form__item form__item_place_sign"
-            placeholder="Пароль"
-            name="password"
-            value={registerData.password || ''}
-            onChange={handleChangeRegisterData}
-          />
-        </fieldset>
-
-        <button type="submit" className="form__submit form__button_place_sign">
-          Зарегистрироваться
-        </button>
-      </form>
-      <p className="sign__registred">
-        Уже зарегистрированы?
-        {' '}
-        <Link to="/signin" rel="noreferrer" className="sign__login-link">
-          Войти
-        </Link>
-      </p>
-    </div>
-  );
+    return (
+        <SignPopup
+            name={'login'}
+            title={'Регистрация'}
+            isOpen={isOpen}
+            onClose={onClose}
+            buttonText={'Зарегистрироваться'}
+            onSubmit={handleSubmit}
+            linkToEntry={linkToEntry}
+            isDisabled={!email || !password}
+        >
+            <input type="email" placeholder="Email" className={`popup__input popup__input_value_name sign__input`}
+                   id="email-input" name="email" minLength="2" maxLength="40" required value={email}
+                   onChange={handleEmailChange}/>
+            <span id="email-input-error" className="popup__input-error popup__input-error_active sign__input-error"/>
+            <input type="password" placeholder="Пароль"
+                   className={`popup__input popup__input_value_job sign__input`}
+                   id="password-input" name="password" minLength="2" maxLength="200" required value={password}
+                   onChange={handlePasswordChange}/>
+            <span id="password-input-error" className="popup__input-error popup__input-error_active sign__input-error"/>
+        </SignPopup>
+    );
 }
+
 
 export default Register;

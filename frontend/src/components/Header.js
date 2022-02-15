@@ -1,62 +1,59 @@
-import { Link } from 'react-router-dom';
+import logo from "../images/logo.svg";
+import {useLocation, Link} from "react-router-dom";
+import {useState} from "react";
 
-/* eslint-disable jsx-a11y/anchor-has-content */
-function Header(props) {
-  const {
-    loggedIn, onSignOut, email, currentRoute,
-  } = props;
+function Header({loggedIn, onSingOut, autoEmail}) {
 
-  return (
-    <header className="header section page__header">
-      <Link
-        to="/"
-        className="header__logo"
-        aria-label="Логотип &laquo;Место. Россия&raquo;"
-        rel="noreferrer"
-      />
-      <div className="header__auth">
-        {loggedIn ? (
-          <>
-            <Link
-              to="/profile"
-              className="header__button header__button_type_email"
-            >
-              {email}
-            </Link>
+    const [isActive, setIsActive] = useState(false);
 
-            <Link
-              to="/signout"
-              className="header__button header__button_type_logout "
-              onClick={onSignOut}
-            >
-              Выйти
-            </Link>
-          </>
-        ) : (
-          // Отобразить ссылку Регистрация или Войти в зависимости от роута
-          <>
-            {(currentRoute === '/signin') ? (
-              <Link
-                to="/signup"
-                rel="noreferrer"
-                className="header__button header__button_type_register"
-              >
-                Регистрация
-              </Link>
-            ) : (
-              <Link
-                to="/signin"
-                rel="noreferrer"
-                className="header__button header__button_type_login"
-              >
-                Войти
-              </Link>
+    const address = useLocation();
+
+    function handleSignOut() {
+        setIsActive(false);
+        setTimeout(onSingOut, 700);
+    }
+
+    function handleNavi() {
+        setIsActive(!isActive);
+    }
+
+    return (
+        <header className="header page__item">
+            {loggedIn && (
+            <div className={`header__menu ${!isActive ? 'header__menu_active' : ''}`}>
+                <nav className={`header__entry header__show-menu`}>
+                    <p className="header__text">{autoEmail}</p>
+                    <button className="header__button" type="button" onClick={handleSignOut}>Выйти</button>
+                </nav>
+            </div>
             )}
-          </>
-        )}
-      </div>
-    </header>
-  );
+            <div className="header__basic">
+                <img src={logo} alt="Лого шапки" className="header__logo"/>
+                {loggedIn && (
+                    <>
+                            <nav className="header__entry">
+                                <p className="header__text">{autoEmail}</p>
+                                <button className="header__button" type="button" onClick={handleSignOut}>Выйти</button>
+                            </nav>
+                        <button className="header__navi" type="button" onClick={handleNavi}>
+                            <span
+                                className={`header__navi-line 
+                                ${isActive ? 'header__navi-line_active' : ''}`}>
+                            </span>
+                        </button>
+                    </>
+                )}
+            {!loggedIn && (
+                <p>
+                    {address.pathname === '/signin' &&
+                    (<Link className="header__link" to="/signup">Регистрация</Link>)}
+                    {address.pathname === '/signup' &&
+                    (<Link className="header__link" to="/signin">Войти</Link>)}
+                </p>
+            )}
+            </div>
+        </header>
+    );
 }
 
 export default Header;

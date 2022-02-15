@@ -1,65 +1,48 @@
-import { useState, useEffect } from 'react';
+// import * as auth from '../auth.js';
 
-function Login({
-  loggedIn, setSuccessRegister, onLogin, setCurrentRoute, history,
-}) {
-  const [loginData, setLoginData] = useState({
-    email: '',
-    password: '',
-  });
+import SignPopup from "./SignPopup";
+import {useState} from "react";
 
-  function handleChangeLoginData(evt) {
-    const { name, value } = evt.target;
+function Login({isOpen, onClose, onEntryUser}) {
 
-    setLoginData({
-      ...loginData,
-      [name]: value,
-    });
-  }
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
 
-  function handleSubmit(evt) {
-    evt.preventDefault();
+    function handleEmailChange(e) {
+        setEmail(e.target.value);
+    }
 
-    onLogin({ loginData, setLoginData });
-  }
+    function handlePasswordChange(e) {
+        setPassword(e.target.value);
+    }
 
-  useEffect(() => {
-    if (loggedIn) history.push('/');
-  }, [loggedIn]);
+    function handleSubmit(e) {
+        e.preventDefault();
+        onEntryUser(email, password);
+    }
 
-  useEffect(() => {
-    setSuccessRegister(false);
-    setCurrentRoute('/signin');
-  }, []);
-
-  return (
-    <div className="sign__container">
-      <form className="form" onSubmit={handleSubmit}>
-        <h3 className="form__title form__title_place_sign">Вход</h3>
-        <fieldset className="form__input-container form__input-container">
-          <input
-            type="email"
-            className="form__item form__item_place_sign"
-            placeholder="Email"
-            name="email"
-            value={loginData.email || ''}
-            onChange={handleChangeLoginData}
-          />
-
-          <input
-            type="password"
-            className="form__item form__item_place_sign"
-            placeholder="Пароль"
-            name="password"
-            value={loginData.password || ''}
-            onChange={handleChangeLoginData}
-          />
-        </fieldset>
-
-        <button type="submit" className="form__submit form__button_place_sign">Войти</button>
-      </form>
-    </div>
-  );
+    return (
+        <SignPopup
+            name={'login'}
+            title={'Вход'}
+            isOpen={isOpen}
+            onClose={onClose}
+            buttonText={'Войти'}
+            onSubmit={handleSubmit}
+            isDisabled={!email || !password}
+        >
+            <input type="email" placeholder="Email" className={`popup__input popup__input_value_name sign__input`}
+                   id="email-input" name="email" minLength="2" maxLength="40" required value={email}
+                   onChange={handleEmailChange}/>
+            <span id="email-input-error" className="popup__input-error popup__input-error_active sign__input-error"/>
+            <input type="password" placeholder="Пароль"
+                   className={`popup__input popup__input_value_job sign__input`}
+                   id="password-input" name="password" minLength="2" maxLength="200" required value={password}
+                   onChange={handlePasswordChange}/>
+            <span id="password-input-error" className="popup__input-error popup__input-error_active sign__input-error"/>
+        </SignPopup>
+    );
 }
+
 
 export default Login;

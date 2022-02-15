@@ -1,49 +1,74 @@
-import { createRef, useEffect } from 'react';
-import PopupWithForm from './PopupWithForm';
+import PopupWithForm from "./PopupWithForm";
+import {useEffect, useRef, useState} from "react";
 
-function EditAvatarPopup(props) {
-  const profileAvatarRef = createRef();
+function EditAvatarPopup({isOpen, onClose, onUpdateAvatar}) {
 
-  const { isOpen, isLoading, onClose } = props;
+    const avatarRef = useRef('');
+    const [inputValid, setInputValid] = useState(false);
+    const [inputError, setInputError] = useState('');
+    const [inputDirty, setInputDirty] = useState(false);
+    const className = !inputValid && inputDirty ? 'popup__input_type_error popup__input popup__input_type_notlast'
+        : 'popup__input popup__input_type_notlast';
 
-  function handleSubmit(evt) {
-    evt.preventDefault();
+    //Если убрал курсор из инпута
+    function blurHandler(e) {
+        switch (e.target.name) {
+            case 'avatar':
+                setInputDirty(true);
+                break;
+            default:
+                setInputDirty(false);
+                break;
+        }
+    }
 
-    props.onSetIsLoading(true);
+    function handleSubmit(e) {
+        e.preventDefault();
 
-    props.onUpdateAvatar({
-      avatar: profileAvatarRef.current.value,
-    });
-  }
+        onUpdateAvatar({
+            avatar: avatarRef.current.value,
+        });
+    }
 
-  useEffect(() => {
-    profileAvatarRef.current.value = '';
-  }, [profileAvatarRef, isOpen]);
+    function checkInputValid() {
+        setInputValid(avatarRef.current.validity.valid);
+        setInputError(avatarRef.current.validationMessage);
+    }
 
-  return (
-    <PopupWithForm
-      name="change-user-avatar"
-      title="Обновить аватар"
-      ariaLabel="Сохранить новый аватар"
-      buttonText="Сохранить"
-      buttonIsLoadingText="Сохранение"
-      isLoading={isLoading}
-      isOpen={isOpen}
-      onClose={onClose}
-      onSubmit={handleSubmit}
-    >
-      <input
-        type="url"
-        ref={profileAvatarRef}
-        id="profile-avatar"
-        name="profile_avatar"
-        className="form__item form__item_name_change-avatar"
-        placeholder="Ссылка на новый аватар"
-        required
-      />
-      <span className="profile-avatar-error form__item-error" />
-    </PopupWithForm>
-  );
+
+    useEffect(() => {
+        if (isOpen) {
+            avatarRef.current.value = '';
+            setInputValid(false);
+            setInputError('');
+            setInputDirty(false);
+        }
+    }, [isOpen])
+
+    return (
+        <PopupWithForm
+            name={'avatar'}
+            title={'Обновить аватар'}
+            buttonText={'Сохранить'}
+            isOpen={isOpen}
+            onClose={onClose}
+            onSubmit={handleSubmit}
+            isDisabled={!inputValid}
+        >
+            <input type="url" placeholder="https://somewebsite.com/someimage.jpg"
+                   className={className}
+                   id="avatar-input"
+                   name="avatar" required
+                   ref={avatarRef}
+                   defaultValue={''}
+                   onChange={checkInputValid}
+                   onBlur={e => blurHandler(e)}
+            />
+            <span id="avatar-input-error" className="popup__input-error popup__input-error_active">
+            {inputValid && !inputDirty ? '' : inputError}
+            </span>
+        </PopupWithForm>
+    );
 }
 
 export default EditAvatarPopup;

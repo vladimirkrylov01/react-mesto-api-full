@@ -1,57 +1,46 @@
-import { BASE_AUTH_URL } from './constants';
+export const BASE_URL = 'https://api.krylov.students.nomoredomains.work'
+// export const BASE_URL = 'http://localhost:3001'
 
-function checkResponseStatus(res) {
-  if (res.ok) return res.json();
-
-  return Promise.reject(`Ошибка: ${res.status}, ${res.statusText}`);
+function handleResponse(res) {
+    if (res.ok) {
+        return res.json()
+    }
+    return Promise.reject(res.status)
 }
 
-export function register(userData) {
-  return fetch(`${BASE_AUTH_URL}/signup`, {
-    method: 'POST',
-    credentials: 'include',
-    headers: {
-      'Accept': 'application/json',
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(userData),
-  })
-    .then(checkResponseStatus);
+export function register(email, password) {
+    return fetch(`${BASE_URL}/signup`,{
+        method: 'POST',
+        headers: {
+            'Accept': 'application/json',
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({email, password})
+    })
+        .then(handleResponse)
 }
 
-export function authorize(userData) {
-  return fetch(`${BASE_AUTH_URL}/signin`, {
-    method: 'POST',
-    credentials: 'include',
-    headers: {
-      'Accept': 'application/json',
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(userData),
-  })
-    .then(checkResponseStatus);
+export function authorize(email, password) {
+    return fetch(`${BASE_URL}/signin`, {
+        method: 'POST',
+        headers: {
+            'Accept': 'application/json',
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({email, password})
+    })
+        .then(handleResponse)
 }
 
-export function getLoggedUser() {
-  return fetch(`${BASE_AUTH_URL}/users/me`, {
-    method: 'GET',
-    credentials: 'include',
-    headers: {
-      'Accept': 'application/json',
-      'Content-Type': 'application/json',
-    },
-  })
-    .then(checkResponseStatus);
+export function checkToken(jwt) {
+    return fetch(`${BASE_URL}/users/me`, {
+        method: 'GET',
+        headers: {
+            'Accept': 'application/json',
+            "Content-Type": "application/json",
+            "Authorization" : `Bearer ${jwt}`
+        }
+    })
+        .then(handleResponse)
 }
 
-export function logout() {
-  return fetch(`${BASE_AUTH_URL}/logout`, {
-    method: 'DELETE',
-    credentials: 'include',
-    headers: {
-      'Accept': 'application/json',
-      'Content-Type': 'application/json',
-    },
-  })
-    .then(checkResponseStatus);
-}

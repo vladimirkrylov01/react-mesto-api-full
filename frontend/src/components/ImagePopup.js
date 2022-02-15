@@ -1,40 +1,22 @@
-import { useRef } from 'react';
+function ImagePopup({isOpen, card, onClose}) {
 
-function ImagePopup(props) {
-  const { card, isOpen, onClose } = props;
+    function handlePopupClose(e) {
+        if (e.target.classList.contains('popup_opened')) {
+            onClose();
+        }
+    }
 
-  const imageFallbackContainer = useRef(null);
-
-  return (
-    <div
-      className={`popup popup_type_image ${isOpen ? 'popup_opened' : ''}`}
-      onMouseDown={onClose}
-    >
-      <div className="popup__container popup__container_type_image">
-        <button
-          type="button"
-          className="popup__close"
-          aria-label="Закрыть окно редактирования"
-        />
-        <figure className="figure" ref={imageFallbackContainer}>
-          {card && (
-            <img
-              src={card ? card.link : ''}
-              alt={card ? card.name : ''}
-              className="figure__image"
-              onLoad={(evt) => {
-                imageFallbackContainer.current.style.width = `${evt.target.offsetWidth}px`;
-                imageFallbackContainer.current.style.height = `${evt.target.offsetHeight}px`;
-              }}
-            />
-          )}
-          <figcaption className="figure__caption">
-            {card ? card.name : ''}
-          </figcaption>
-        </figure>
-      </div>
-    </div>
-  );
+    return (
+        <div className={`popup popup_type_open-image ${isOpen ? 'popup_opened' : ''}`}
+             onClick={handlePopupClose}>
+            <div className="popup__open-image">
+                <img src={card ? card.link : ''} alt={card ? card.name: ''} className="popup__image"/>
+                <p className="popup__image-title">{card ? card.name: ''}</p>
+                <button className="popup__close popup__close_type_image" type="button" aria-label="Закрыть"
+                        onClick={onClose}/>
+            </div>
+        </div>
+    );
 }
 
 export default ImagePopup;

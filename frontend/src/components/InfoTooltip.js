@@ -1,36 +1,29 @@
-import React from 'react';
-import successfulAuthImage from '../images/successful-auth.svg';
-import failedAuthImage from '../images/failed-auth.svg';
+import error from "../images/error.svg";
+import success from "../images/success.svg"
 
-function InfoToolTip(props) {
-  const {
-    name, isOpen, onSuccessRegister, onClose,
-  } = props;
+function InfoTooltip({isOpen, onClose, isRegistered}) {
 
-  return (
-    <div
-      className={`popup popup_type_${name} ${isOpen ? 'popup_opened' : ''}`}
-      onMouseDown={onClose}
-    >
-      <div className="popup__container">
-        <button
-          type="button"
-          className="popup__close"
-          aria-label="Закрыть окно"
-        />
-        <img
-          src={onSuccessRegister ? successfulAuthImage : failedAuthImage}
-          alt=""
-          className="popup__auth-image"
-        />
-        <p className="popup__auth-result">
-          {onSuccessRegister
-            ? 'Вы успешно зарегистрировались!'
-            : 'Что-то пошло не так! Попробуйте ещё раз.'}
-        </p>
-      </div>
-    </div>
-  );
+    function handlePopupClose(e) {
+        if (e.target.classList.contains('popup_opened')) {
+            onClose();
+        }
+    }
+
+    return (
+        <div className={`popup ${isOpen ? 'popup_opened' : ''}`}
+             onClick={handlePopupClose}>
+            <div className="popup__container popup__container_type_tooltip">
+                <img className="popup__icon" src={isRegistered ? success : error}
+                     alt={isRegistered ? 'иконка успешной регистрации' : 'иконка ошибки'}/>
+                <h3 className="popup__form-header popup__tooltip-title">{isRegistered ?
+                    'Вы успешно зарегистрировались!' :
+                    'Что-то пошло не так... Попробуйте ещё раз.'}
+                </h3>
+                <button onClick={onClose} className={`popup__close`}
+                        type="button" aria-label="Закрыть"/>
+            </div>
+        </div>
+    );
 }
 
-export default InfoToolTip;
+export default InfoTooltip;
