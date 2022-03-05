@@ -1,5 +1,4 @@
 {
-  "homepage": "https://dariakutuzova.github.io/react-mesto-auth/",
   "name": "react-mesto-auth",
   "version": "0.1.0",
   "private": true,
@@ -29,16 +28,5 @@
     "eslint-plugin-import": "^2.25.4",
     "nodemon": "^2.0.15"
   },
-  "description": "`/routes` — папка с файлами роутера  \r `/controllers` — папка с файлами контроллеров пользователя и карточки   \r `/models` — папка с файлами описания схем пользователя и карточки",
   "main": ".eslintrc.js",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/DariaKutuzova/express-mesto.git"
-  },
-  "keywords": [],
-  "author": "Daria Kutuzova",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/DariaKutuzova/express-mesto/issues"
-  }
 }
