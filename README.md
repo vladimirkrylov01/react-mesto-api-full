@@ -8,4 +8,4 @@ https://krylov.students.nomoredomains.work
 https://api.krylov.students.nomoredomains.work
 
 #IP Сервера
-http://178.154.222.15
+http://178.154.255.94
